@@ -1,16 +1,12 @@
 package mapapp.cody.com.mapapp;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +21,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This shows how to place markers on a map.
@@ -80,7 +73,7 @@ public class MapActivity extends FragmentActivity
             if (title != null) {
                 // Spannable string allows us to edit the formatting of the text.
                 SpannableString titleText = new SpannableString(title);
-                titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
+                //titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
                 titleUi.setText(titleText);
             } else {
                 titleUi.setText("");
@@ -90,8 +83,8 @@ public class MapActivity extends FragmentActivity
             TextView snippetUi = ((TextView) view.findViewById(R.id.snippet));
             if (snippet != null && snippet.length() > 12) {
                 SpannableString snippetText = new SpannableString(snippet);
-                snippetText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, snippet.length(), 0);
-                snippetText.setSpan(new BackgroundColorSpan(Color.RED), 0, snippet.length(), 0);
+                //snippetText.setSpan(new ForegroundColorSpan(Color.WHITE), 0, snippet.length(), 0);
+                //snippetText.setSpan(new BackgroundColorSpan(Color.RED), 0, snippet.length(), 0);
                 snippetUi.setText(snippetText);
             } else {
                 snippetUi.setText("");
@@ -101,34 +94,16 @@ public class MapActivity extends FragmentActivity
 
     private GoogleMap mMap;
 
-    private Marker mPerth;
-    private Marker mSydney;
-    private Marker mBrisbane;
-    private Marker mAdelaide;
-    private Marker mMelbourne;
-
     /**
      * Keeps track of the last selected marker (though it may no longer be selected).  This is
      * useful for refreshing the info window.
      */
     private Marker mLastSelectedMarker;
 
-    //TODO get map locations and add to marker list array
-
-    private final List<Marker> mMarkerList = new ArrayList<Marker>();
-
-    private RadioGroup mOptions;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.marker_demo);
-
-
-
-        //TODO make OnCheckedChange go thru cities
 
         setUpMapIfNeeded();
     }
@@ -203,17 +178,18 @@ public class MapActivity extends FragmentActivity
         }
     }
 
-
+    private Marker mOutlook;
+    private Marker mMelt;
 
     private void addMarkersToMap() {
         // Uses a colored icon.
-        mBrisbane = mMap.addMarker(new MarkerOptions()
+        mOutlook = mMap.addMarker(new MarkerOptions()
                 .position(OUTLOOKHQ)
                 .title("Outlook Headquarters")
                 .snippet("The people who bring you such wonderful media"));
 
         // Creates a draggable marker. Long press to drag.
-        mMelbourne = mMap.addMarker(new MarkerOptions()
+        mMelt = mMap.addMarker(new MarkerOptions()
                 .position(MELT)
                 .title("Melt")
                 .snippet("Delicious grilled cheese, most dining options deep fried"));
