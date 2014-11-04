@@ -4,28 +4,23 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -49,12 +44,8 @@ public class MapActivity extends FragmentActivity
     private static final LatLng COLUMBUS_E = new LatLng(39.976383, -83.119156);
     private static final LatLng COLUMBUS_W = new LatLng(39.967832, -82.950585);
 
-
     private static final LatLng OUTLOOKHQ = new LatLng(39.979377, -83.004706);
     private static final LatLng MELT = new LatLng(39.979426, -83.003687);
-    private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
-    private static final LatLng ADELAIDE = new LatLng(-34.92873, 138.59995);
-    private static final LatLng PERTH = new LatLng(-31.952854, 115.857342);
 
     /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements InfoWindowAdapter {
@@ -70,44 +61,17 @@ public class MapActivity extends FragmentActivity
 
         @Override
         public View getInfoWindow(Marker marker) {
-            if (mOptions.getCheckedRadioButtonId() != R.id.custom_info_window) {
-                // This means that getInfoContents will be called.
-                return null;
-            }
             render(marker, mWindow);
             return mWindow;
         }
 
         @Override
         public View getInfoContents(Marker marker) {
-            if (mOptions.getCheckedRadioButtonId() != R.id.custom_info_contents) {
-                // This means that the default info contents will be used.
-                return null;
-            }
             render(marker, mContents);
             return mContents;
         }
 
         private void render(Marker marker, View view) {
-            int badge;
-            // Use the equals() method on a Marker to check for equals.  Do not use ==.
-           /*if (marker.equals(mBrisbane)) {
-                badge = R.drawable.badge_qld;
-            } else if (marker.equals(mAdelaide)) {
-                badge = R.drawable.badge_sa;
-            } else if (marker.equals(mSydney)) {
-                badge = R.drawable.badge_nsw;
-            } else if (marker.equals(mMelbourne)) {
-                badge = R.drawable.badge_victoria;
-            } else if (marker.equals(mPerth)) {
-                badge = R.drawable.badge_wa;
-            } else {
-                // Passing 0 to setImageResource will clear the image view.
-                badge = 0;
-            }
-            ((ImageView) view.findViewById(R.id.badge)).setImageResource(badge);*/
-
-
 
             //TODO maybe change color based on attraction type
 
@@ -162,18 +126,9 @@ public class MapActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.marker_demo);
 
-        //TODO make OnCheckedChange go thru cities
 
-        mOptions = (RadioGroup) findViewById(R.id.custom_info_window_options);
-        mOptions.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (mLastSelectedMarker != null && mLastSelectedMarker.isInfoWindowShown()) {
-                    // Refresh the info window when the info window's content has changed.
-                    mLastSelectedMarker.showInfoWindow();
-                }
-            }
-        });
+
+        //TODO make OnCheckedChange go thru cities
 
         setUpMapIfNeeded();
     }
@@ -225,13 +180,12 @@ public class MapActivity extends FragmentActivity
                 @SuppressLint("NewApi") // We check which build version we are using.
                 @Override
                 public void onGlobalLayout() {
-                    //TODO
-                    //If columbus, if Cinn , etc
+
                     LatLngBounds bounds = new LatLngBounds.Builder()
-                            .include(COLUMBUS_N)
-                            .include(COLUMBUS_E)
-                            .include(COLUMBUS_W)
-                            .include(COLUMBUS_S)
+                            .include(OUTLOOKHQ)
+                            //.include(COLUMBUS_E)
+                            //.include(COLUMBUS_W)
+                            //.include(COLUMBUS_S)
                             //.include(MELT)
                             .build();
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -239,7 +193,11 @@ public class MapActivity extends FragmentActivity
                     } else {
                         mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
+
                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+                    CameraUpdate zoom=CameraUpdateFactory.zoomTo(13);
+                    mMap.animateCamera(zoom);
+
                 }
             });
         }
@@ -254,48 +212,12 @@ public class MapActivity extends FragmentActivity
                 .title("Outlook Headquarters")
                 .snippet("The people who bring you such wonderful media"));
 
-        // Uses a custom icon with the info window popping out of the center of the icon.
-        mSydney = mMap.addMarker(new MarkerOptions()
-                .position(SYDNEY)
-                .title("Sydney")
-                .snippet("Population: 4,627,300")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow))
-                .infoWindowAnchor(0.5f, 0.5f));
-
         // Creates a draggable marker. Long press to drag.
         mMelbourne = mMap.addMarker(new MarkerOptions()
                 .position(MELT)
                 .title("Melt")
                 .snippet("Delicious grilled cheese, most dining options deep fried"));
 
-        // A few more markers for good measure.
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(PERTH)
-                .title("Perth")
-                .snippet("Population: 1,738,800"));
-        mAdelaide = mMap.addMarker(new MarkerOptions()
-                .position(ADELAIDE)
-                .title("Adelaide")
-                .snippet("Population: 1,213,000"));
-
-        // Creates a marker rainbow demonstrating how to create default marker icons of different
-        // hues (colors).
-        //float rotation = mRotationBar.getProgress();
-        //boolean flat = mFlatBox.isChecked();
-
-
-       // Makes rainbow in austrailia
-        /*int numMarkersInRainbow = 55;
-        for (int i = 0; i < numMarkersInRainbow; i++) {
-            mMarkerRainbow.add(mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(
-                            -30 + 10 * Math.sin(i * Math.PI / (numMarkersInRainbow - 1)),
-                            135 - 10 * Math.cos(i * Math.PI / (numMarkersInRainbow - 1))))
-                    .title("Marker " + i)
-                    .icon(BitmapDescriptorFactory.defaultMarker(i * 360 / numMarkersInRainbow))
-
-                    ));
-        }*/
     }
 
     private boolean checkReady() {
@@ -306,23 +228,52 @@ public class MapActivity extends FragmentActivity
         return true;
     }
 
-    /** Called when the Clear button is clicked. */
-    public void onClearMap(View view) {
+    /** Called when the Columbus button is clicked. */
+    public void onColumbusMap(View view) {
         if (!checkReady()) {
             return;
         }
-        mMap.clear();
+        CameraUpdate center=
+                CameraUpdateFactory.newLatLng(new LatLng(39.974796, -82.999755));
+
+        mMap.moveCamera(center);
     }
 
+     /** Called when the Cincinnati button is clicked. */
+     public void onCincinnatiMap(View view) {
+             if (!checkReady()) {
+                 return;
+             }
+             CameraUpdate center=
+                     CameraUpdateFactory.newLatLng(new LatLng(39.103178, -84.514309));
+
+             mMap.moveCamera(center);
+         }
+
+     /** Called when the Cleveland button is clicked. */
+     public void onClevelandMap(View view) {
+         if (!checkReady()) {
+             return;
+         }
+         CameraUpdate center=
+                 CameraUpdateFactory.newLatLng(new LatLng(41.495071, -81.695560));
+
+         mMap.moveCamera(center);
+     }
+
+     public void onToledoMap(View view) {
+         if (!checkReady()) {
+             return;
+         }
+         CameraUpdate center=
+                 CameraUpdateFactory.newLatLng(new LatLng(41.660531, -83.555932));
+
+         mMap.moveCamera(center);
+     }
+
+
     /** Called when the Reset button is clicked. */
-    public void onResetMap(View view) {
-        if (!checkReady()) {
-            return;
-        }
-        // Clear the map because we don't want duplicates of the markers.
-        mMap.clear();
-        addMarkersToMap();
-    }
+
 
     //
     // Marker related listeners.
@@ -330,29 +281,6 @@ public class MapActivity extends FragmentActivity
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (marker.equals(mPerth)) {
-            // This causes the marker at Perth to bounce into position when it is clicked.
-            final Handler handler = new Handler();
-            final long start = SystemClock.uptimeMillis();
-            final long duration = 1500;
-
-            final Interpolator interpolator = new BounceInterpolator();
-
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    long elapsed = SystemClock.uptimeMillis() - start;
-                    float t = Math.max(1 - interpolator
-                            .getInterpolation((float) elapsed / duration), 0);
-                    marker.setAnchor(0.5f, 1.0f + 2 * t);
-
-                    if (t > 0.0) {
-                        // Post again 16ms later.
-                        handler.postDelayed(this, 16);
-                    }
-                }
-            });
-        }
 
         mLastSelectedMarker = marker;
         // We return false to indicate that we have not consumed the event and that we wish

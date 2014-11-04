@@ -29,43 +29,46 @@
       android:layout_height="match_parent"
       class="com.google.android.gms.maps.SupportMapFragment"/>
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="bottom|right"
-      android:background="#D000"
+      android:background="#7F0000"
       android:orientation="vertical"
       android:padding="5dp">
-      <LinearLayout
+     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_weight="0.5"
-          android:onClick="onClearMap"
-          android:text="@string/clear_map"/>
+          android:onClick="onColumbusMap"
+          android:text="Columbus"
+            android:textColor="#ffffff"/>
+         <Button
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.5"
+             android:onClick="onClevelandMap"
+             android:text="Cleveland"
+             android:textColor="#ffffff"/>
         <Button
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_weight="0.5"
-          android:onClick="onResetMap"
-          android:text="@string/reset_map"/>
+          android:onClick="onCincinnatiMap"
+          android:text="Cincinnati"
+            android:textColor="#ffffff"/>
+         <Button
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.5"
+             android:onClick="onToledoMap"
+             android:text="Toledo"
+             android:textColor="#ffffff"/>
+
       </LinearLayout>
-      <RadioGroup
-        android:id="@+id/custom_info_window_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <RadioButton
-          android:id="@+id/default_info_window"
-          android:checked="true"
-          android:text="@string/default_info_window"/>
-        <RadioButton
-          android:id="@+id/custom_info_contents"
-          android:text="@string/custom_info_contents"/>
-        <RadioButton
-          android:id="@+id/custom_info_window"
-          android:text="@string/custom_info_window"/>
-      </RadioGroup>
+
     </LinearLayout>
   </FrameLayout>
 </LinearLayout>
